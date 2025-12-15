@@ -144,7 +144,7 @@ agent_tools = [
 
 root_agent = Agent(
     model="gemini-3-pro-preview",
-    name="agent_genie",
+    name="agent_genie_promax",
     description="A grounded AI agent design assistant.",
     tools=agent_tools,
     instruction=POWER_INSTRUCTION,
