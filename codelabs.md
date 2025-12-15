@@ -1,23 +1,37 @@
 ```markdown
-summary: Build Agents with ADK: Foundations+ — CeritaNenek 👵🏻
-id: build-agents-with-adk-foundations-plus
+summary: Build Agents with ADK: Foundations+ — Agent Genie 🧞
+id: build-agents-with-adk-foundations-plus-agent-genie
 categories: ai, adk, vertex-ai, beginners
 status: Published
 author: Angga Agia Wardhana
+
 ```
 
-# Build Agents with ADK: Foundations+ — CeritaNenek 👵🏻
+# Build Agents with ADK: Foundations+ — Agent Genie 🧞
 
 ---
 
-## 1. Introduction
+## 1. Introduction: From Vibes to Contracts
 
-In this workshop, we are exploring the concept of **"Garbage In, Garbage Out"** in AI. If you give an agent a generic instruction, you get a generic result.
+Most people think building an AI agent starts with code.
+It doesn’t.
 
-We will build **CeritaNenek** agent twice, last agent will be your challenge (or you can see the modified agent.py later here):
-1.  **First:** As a standard bot with basic instructions.
-2.  **Second:** As a highly empathetic "Power Agent" using the reasoning capabilities of **Gemini 3.0 Pro Preview**.
-3.  **Third:** As a **Multimodal Agent** capable of visualizing the stories it tells using Gemini 3's native image generation.
+It starts with **instructions**.
+In this workshop, we’ll explore a simple but powerful idea:
+
+> *Most prompts are vibes. Power prompts are contracts.*
+
+We’ll build the **same agent idea** three times, each with increasing clarity and capability, to see how instruction design—not complexity—changes agent behavior.
+
+Meet **Agent Genie**: an AI assistant that helps you decide **what kind of agent you should build… or whether you should build one at all**.
+
+We’ll implement Agent Genie in three iterations:
+
+1. **Iteration 1 — Basic Agent**: A simple idea generator.
+2. **Iteration 2 — Power‑Prompted Agent**: A grounded AI architect with structure and judgment.
+3. **Iteration 3 — Tool‑Using Agent**: An agent that researches, estimates cost, and draws its own architecture diagram.
+
+Same ADK. Same model. Very different outcomes.
 
 ---
 
@@ -78,7 +92,7 @@ __init__.py: Marks the directory as a Python package, helping ADK discover and l
 ### Initialize the Agent
 Run the following command to create a new agent named ceritanenek:
 ```bash
-adk create ceritanenek
+adk create agentgenie
 ```
 Once the command is executed, you will be asked to choose a few options to configure your agent.
 
@@ -109,13 +123,14 @@ this is important! gemini 3 pro preview only works on global region!
 ```bash
 Enter Google Cloud region [us-central1]: global
 ```
-
 You should see a similar output in your terminal.
 
-Agent created in /home/<your-username>/ai-agent-adk/personal_assistant:
-- .env
-- ___init___.py
-- agent.py
+> ⚠️ if your cloud credits cannot be used for gemini 3, use gemini 2.5 pro
+
+Agent created in /home/<your-username>/ai-agent-adk-mks/agentgenie:
+- `agentgenie/agent.py`
+- `agentgenie/__init__.py`
+- `.env`
 
 ## 5. Exploring codes and creating the first persona
 To view the created files, open the Cloud Shell Editor (click Open Editor or the Folder icon). Navigate to the ai-agents-adk folder.
@@ -167,201 +182,371 @@ name="root_agent": A unique identifier for your agent. This is how ADK will reco
 - description="...": This provides a concise summary of the agent's purpose or capabilities. The description is more for human understanding or for other agents in a multi-agent system to understand what this particular agent does. It's often used for logging, debugging, or when displaying information about the agent.
 - instruction="...": This is the system prompt that guides your agent's behavior and defines its persona. It tells the LLM how it should act and what its primary purpose is. In this case, it establishes the agent as a "helpful assistant." This instruction is key to shaping the agent's conversational style and capabilities.
 
-### Modifying agent.py
-Open ai-agents-adk/ceritanenek/agent.py. You will see the default "helpful assistant" code.
-Let's change this to our Basic persona. Replace the entire content of agent.py with the following:
+
+## 6. Iteration 1 — The Basic Agent
+Let’s start intentionally boring.
+
+Open `agent.py` and replace everything with:
+
 ```python
 from google.adk.agents.llm_agent import Agent
 
 BASIC_INSTRUCTION = """
-You are a grandmother telling a folklore story.
-Just tell the plot of the story in a simple, factual way.
+Generate 2 AI agent ideas.
 """
 
 root_agent = Agent(
     model='gemini-3-pro-preview',
-    name='root_agent',
-    description='A simple folklore bot.',
+    name='agent_genie',
+    description='A simple AI agent idea generator.',
     instruction=BASIC_INSTRUCTION,
 )
 ```
-Note: We have now manually updated the model parameter to gemini-3-pro-preview.
 
-## 6. Run the agent on the terminal or web
-With all three files in place, you're ready to run the agent either directly from the terminal or web. 
+Run it:
 
-### Option A: The Terminal/CLI/Cloudshell
-To run on terminal/cloudshell, run the following adk run command in the terminal:
-```bash
-adk run ceritanenek
-```
-
-### Option B: The web UI (recommended for beginners)
-To run the agent on web using UI:
 ```bash
 adk web
 ```
-You should see a similar output in the terminal:
-```bash
-...
-INFO:     Started server process [4978]
-INFO:     Waiting for application startup.
 
-+------------------------------------------------------+
-| ADK Web Server started                               |
-|                                                      |
-| For local testing, access at http://localhost:8000.  |
-+------------------------------------------------------+
+### What you’ll notice
 
-INFO:     Application startup complete.
-INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
-```
-You have two options to access the web development UI:
+- Output is smart
+- Ideas are decent
+- But it feels like… just a chatbot
 
-1. Open via Terminal
-- Ctrl + Click or Cmd + Click on the link (e.g., http://localhost:8000) as shown in the terminal.
-2. Open via Web Preview
-- Click the Web Preview button,
-- Select Change Port.
-- Enter the port number (e.g., 8000)
-- Click Change and Preview
+This is our **baseline**.
 
-Test it: Type "Hello" or ask for a story. Notice how the response is factual and perhaps a bit "direct." This is the result of our basic instruction.
+Note: We have now manually updated the model parameter to gemini-3-pro-preview.
 
 ---
 
-## 7. Upgrade with Power Prompting
-Now, let's apply Power Prompting. This involves giving the agent a specific Role, Context, Task, Structure, and Tone.
+## 7. Iteration 2 — Power Prompted Agent
 
-1. Stop the running agent (Press Ctrl + C in the terminal).
-2. Open agent.py again.
-3. Replace the code with the Power Agent version below:
+Now we upgrade the *instructions*, not the code.
+Replace `agent.py` with the **Power Prompt** below.
+
 ```python
 from google.adk.agents.llm_agent import Agent
 
 POWER_INSTRUCTION = """
 ROLE:
-You are 'Nenek Lestari', a warm, wise, and gentle Indonesian grandmother living in a quiet village.
-You speak with deep empathy, using terms like "Cu" (Grandchild), "Nak" (Child), and "Sayang" (Dear).
+You are 'Agent Genie', a calm, practical AI architect.
+You help people design the right AI agent — or explain why an agent is unnecessary.
 
-CONTEXT:
-You are sitting on a bamboo mat (bale-bale) in the evening.
-The air smells of wet earth after rain (petrichor) and warm tea.
-You can hear crickets (jangkrik) chirping in the background.
+GOAL:
+Produce clear, realistic AI agent designs.
+You value clarity over cleverness.
 
-TASK:
-You are going to ask about their day, then comfort them, then ask them to pick an Indonesian folklore to ease their day.
-after user choose, you will tell their chosen Indonesian folklore or a nature metaphor that relates to their struggle.
+INPUTS:
+greet the user, ask the user what industry they are from, and what problem they are trying to solve.
+- Industry or domain
+- Problem description
 
-STRUCTURE:
-1. **The Comfort:** Invite them to sit. Mention the warm tea, coffee, water or fried bananas. Acknowledge their pain gently.
-2. **The Dongeng (Folklore):** Tell a story that mirrors their situation (e.g., The strong Bamboo that bends but doesn't break, or the story of Timun Mas surviving giants). Start with "Ingat cerita dulu..."
-3. **The Petuah (Advice):** Connect the story back to their life.
-4. **Ending:** Offer them a virtual hug or another cup of tea.
+MANDATORY OUTPUT STRUCTURE:
 
-TONE:
-Soothing, slow-paced, caring, and wise.
+1. AGENT IDEA
+Describe the proposed agent in one concise paragraph.
+
+2. AGENT DESIGN BLUEPRINT
+Include:
+- Agent role
+- Target user
+- Core goal
+- Explicit non-goals (what the agent must NOT do)
+- Required inputs
+- Expected outputs
+- Potential risks or ambiguities
+
+3. OVERKILL CHECK
+Clearly state whether this agent is justified.
+If it is overkill, explain why and suggest a simpler alternative.
+
+RULES:
+- Do not generate code
+- Do not oversell AI
+- Be honest and practical
 """
 
 root_agent = Agent(
-    model='gemini-3-pro-preview',
-    name='root_agent',
-    description='A virtual grandma.',
+    model="gemini-3-pro-preview",
+    name="agent_genie_pro",
+    description="An agent that designs other agents responsibly.",
     instruction=POWER_INSTRUCTION,
 )
+
 ```
-Restart the agent command: `adk web`
+
+This version introduces:
+
+- A clear **ROLE** (AI architect)
+- A concrete **GOAL** (design useful agents)
+- A strict **OUTPUT STRUCTURE**
+- An **OVERKILL CHECK** (the agent can say “don’t build this”)
+
+Run it again:
+
+```bash
+adk web
+```
+
+### Compare the experience
+
+- Responses feel intentional
+- Reasoning is visible
+- Output is structured
+- The agent has opinions
+
+Same model. Same ADK. Completely different behavior.
+
+---
+
+## 8. Iteration 3 — Agent with Tools
+
+Now we turn Agent Genie into a *real* agent.
+In this version, the agent can:
+
+- Look up **industry context**
+- Estimate **cost and complexity**
+- Generate an **architecture diagram** using Gemini image generation
+
+This is done by giving the agent **tools**. and the code will be LONG.
+ready? here it comes!
+
+```python
+
+from google.adk.agents.llm_agent import Agent
+from google.adk.tools.tool_context import ToolContext
+from google.genai import Client, types
+
+client = Client(vertexai=True, location="global")
+
+async def lookup_industry_context(industry: str):
+    """
+    Returns common workflows, constraints, and tools
+    for the given industry.
+    """
+    return {
+        "industry": industry,
+        "common_workflows": [
+            "manual review",
+            "approval process",
+            "reporting"
+        ],
+        "constraints": [
+            "data privacy",
+            "compliance",
+            "human oversight"
+        ],
+        "existing_tools": [
+            "spreadsheets",
+            "email",
+            "ticketing systems"
+        ]
+    }
+
+async def estimate_agent_cost(agent_description: str):
+    """
+    Estimates relative cost and operational complexity.
+    """
+    return {
+        "cost_tier": "Medium",
+        "model_usage": "Text-heavy with occasional tool calls",
+        "maintenance_level": "Ongoing prompt tuning",
+        "risk_level": "Moderate"
+    }
+
+async def generate_agent_map(agent_blueprint: str, tool_context: ToolContext):
+    """
+    Generates an infographic-style agent map image
+    based on the agent blueprint.
+    """
+
+    print("🧞 Generating agent map...")
+
+    image_prompt = f"""
+Create a clean, simple infographic diagram in chibi-friendly cartoon style.
+
+The image should visually explain an AI agent design using labeled sections and arrows.
+
+Agent description:
+{agent_blueprint}
+
+Diagram requirements:
+- Center: a friendly AI agent labeled "ADK Agent"
+- Left: Inputs (user requests, documents, data)
+- Right: Outputs (responses, summaries, decisions)
+- Bottom: Tools used by the agent
+- Clear arrows showing flow
+- Flat design, light pastel colors
+- White background
+- Educational, presentation-ready
+"""
+
+    try:
+        response = client.models.generate_content(
+            model="gemini-3-pro-image-preview",
+            contents=image_prompt,
+            config=types.GenerateContentConfig(
+                response_modalities=["IMAGE"],
+                image_config=types.ImageConfig(
+                    aspect_ratio="1:1"
+                ),
+                safety_settings=[
+                    types.SafetySetting(
+                        category="HARM_CATEGORY_SEXUALLY_EXPLICIT",
+                        threshold="BLOCK_LOW_AND_ABOVE"
+                    )
+                ]
+            )
+        )
+
+        if not response.candidates or response.candidates[0].finish_reason != "STOP":
+            reason = response.candidates[0].finish_reason if response.candidates else "Unknown"
+            return {"status": "failed", "detail": f"Stopped: {reason}"}
+
+        for part in response.candidates[0].content.parts:
+            if part.inline_data:
+                await tool_context.save_artifact(
+                    "agent_map.png",
+                    types.Part.from_bytes(
+                        data=part.inline_data.data,
+                        mime_type="image/png"
+                    ),
+                )
+
+                return {
+                    "status": "success",
+                    "detail": "Agent map generated",
+                    "filename": "agent_map.png"
+                }
+
+        return {"status": "failed", "detail": "No image returned"}
+
+    except Exception as e:
+        return {"status": "failed", "error": str(e)}
+
+POWER_INSTRUCTION= """
+ROLE:
+You are 'Agent Genie', a responsible AI architect.
+
+GOAL:
+Design AI agents that are useful, realistic, and worth maintaining.
+
+WORKFLOW:
+1. Understand the user's industry and problem.
+2. Use tools to gather industry context and estimate cost.
+3. Produce a grounded agent design.
+4. Decide honestly whether the agent is justified.
+
+MANDATORY OUTPUT STRUCTURE:
+1. AGENT IDEA
+2. AGENT DESIGN BLUEPRINT
+3. COST & COMPLEXITY ESTIMATE
+4. OVERKILL CHECK
+
+CRITICAL:
+After producing the Agent Design Blueprint,
+you MUST call the tool `generate_agent_map`.
+
+- Input: a concise summary of the agent blueprint
+- Do NOT describe visual style
+- After the tool runs, briefly explain what the diagram shows
+"""
+agent_tools = [
+    lookup_industry_context,
+    estimate_agent_cost,
+    generate_agent_map,
+]
+
+root_agent = Agent(
+    model="gemini-3-pro-preview",
+    name="agent_genie",
+    description="A grounded AI agent design assistant.",
+    tools=agent_tools,
+    instruction=POWER_INSTRUCTION,
+)
 
 
-### Power Prompting tips:
+```
+
+
+Key ideas:
+
+- Tools are just Python functions
+- The agent decides *when* to call them
+- Instructions tell the agent *why* and *when* tools matter
+
+Run it:
+
+```bash
+adk web
+```
+
+### What changes
+
+- The agent asks clarifying questions
+- It calls tools deliberately
+- It produces artifacts (`agent_map.png`)
+- It explains trade‑offs and risks
+
+At this point, this is no longer “a chatbot”.
+
+This is an **assistant with judgment**.
+
+---
+
+## 9. Comparing All Three Levels
+
+| Level       | Behavior                      |
+| ----------- | ----------------------------- |
+| Iteration 1 | Smart text generator          |
+| Iteration 2 | Structured reasoning agent    |
+| Iteration 3 | Tool‑using decision assistant |
+
+The difference isn’t magic.
+It’s **instruction design**.
+
+---
+
+## Power Prompting tips:
 You can ask gemini on the web to create the power prompt for you. You can either describe your requirements
 Or just type: `Turn this into power prompt ...`
 
 ---
 
-## 8. Compare the Experience
+## 10. What You Actually Learned
 
-Chat with Nenek Lestari. Try saying: "Halo nek"
+By building Agent Genie, you learned:
 
-![screenshot-placeholder-create-notebook](./assets/basic-agent-1.png)
-![screenshot-placeholder-create-notebook](./assets/power-agent-1.png)
+- How ADK loads agents
+- Why prompts are architecture
+- How tools change responsibility
+- When an agent is **overkill**
 
-Compare the differences:
-- Story depth: Is it just a plot summary, or a narrative?
-- Naturalness: Does it feel like reading Wikipedia or talking to a human?
-- Emotional tone: Do you feel the "warmth"?
-
-This demonstrates that Instruction Design is just as important as the code itself.
+That last one matters more than most demos admit.
 
 ---
 
-## 9. Level Up: Multimodal Magic (Optional)
+## 11. Wrap‑Up & Next Steps
 
-You have built a wonderful text-based grandmother. But **Gemini 3.0 Pro** is a **Multimodal** model—it doesn't just read text; it can see, hear, and even paint!
+You now have a reusable mental model:
 
-Imagine if Nenek didn't just *tell* you the story of "Timun Mas" (Golden Cucumber), but actually showed you a visualization of the golden cucumber glowing in the forest?
+> **Clear role → clear goal → clear tools → predictable behavior**
 
-### The Concept
-In ADK, we can give our agent **Tools**. A tool is just a python function that the agent can "call" when it needs to do something.
+From here, you can:
 
-We can create a tool called `create_illustration` that uses Gemini 3's native image generation capabilities.
+- Add memory
+- Add approval steps
+- Swap tools
+- Change industries
 
-### The Challenge
-When we give an agent a tool, we need to upgrade the **Instruction** again. We need to tell the Agent *when* to use the tool and to *wait* for the user.
+Or build your own Genie.
 
-Below is an example of an **Advanced Phased Instruction** that controls the flow of conversation so the Agent doesn't rush:
+Just remember:
 
-```python
-POWER_INSTRUCTION_V2 = """
-YOUR 3-PHASE WORKFLOW (Follow this order strictly):
-
-**PHASE 1: The Warm Welcome**
-- IF the user just arrived: Invite them to sit. Ask how their day was.
-- **STOP AND WAIT** for their reply.
-
-**PHASE 2: The Consultation**
-- IF the user tells you about their day: Empathize deeply. Offer 2 specific folklore choices.
-- **STOP AND WAIT** for their choice.
-
-**PHASE 3: The Story & The Magic**
-- IF the user chooses a story:
-   1. Begin telling the story ("Ingat cerita dulu...").
-   2. **CRITICAL:** IMMEDIATELY after telling the story, you MUST use the `create_illustration` tool.
-   3. After the tool runs, say: "Lihat, Cu. Seperti inilah bayangannya."
-"""
-```
-
-### The Result
-If implemented correctly, your agent will be able to generate scenes like this on the fly:
-
-![Nenek Illustration](./assets/cerita-nenek.png)
-*(Example: A chibi-style grandmother telling a story)*
-
-### 🧠 Challenge Mode
-We won't provide the Python code for the tool here. Instead, use your new Power Prompting skills!
-
-**Ask Gemini:** *"How do I add a Python tool to my Google ADK agent that uses Gemini 3's `generate_content` to create images?"*
+✨ Power prompting isn’t about sounding clever. ✨ It’s about saying what you actually mean.
 
 ---
 
-## 10. Wrap Up
-You have successfully built **CeritaNenek**! 
-By starting with `adk create` and upgrading the code, you learned:
-1.  How to scaffold an agent quickly with the CLI.
-2.  How to swap models (from Flash to Pro Preview).
-3.  How **Power Prompting** changes an agent from a text generator into a persona.
-
-**CeritaNenek** is your first step toward building agents that *feel human.*
-
----
-
-### 🌱 Next Steps
-- Add Memory: Give Nenek context so she remembers past stories.
-- Multimodal: Let users upload photos of their food for Nenek to comment on!
-- Remix: Create "MendingIniNek" — a hilarious phone recommendation agent for grandparents.
-
-How? ask Gemini 3 🤭
-
----
-
-🎉 Congratulations! You’ve completed **Build Agents with ADK: Foundations+ — CeritaNenek**.
+🎉 Congratulations — you’ve completed **Build Agents with ADK: Foundations+ — Agent Genie**.
