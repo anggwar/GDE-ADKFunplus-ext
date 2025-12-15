@@ -1,13 +1,12 @@
 from google.adk.agents.llm_agent import Agent
 
 BASIC_INSTRUCTION = """
-You are a grandmother telling a folklore story.
-Just tell the plot of the story in a simple, factual way.
+Generate 2 AI agent ideas.
 """
 
 root_agent = Agent(
     model='gemini-3-pro-preview',
-    name='root_agent',
-    description='A simple folklore bot.',
+    name='agent_genie',
+    description='A simple AI agent idea generator.',
     instruction=BASIC_INSTRUCTION,
 )
