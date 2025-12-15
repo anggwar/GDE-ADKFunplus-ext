@@ -1,125 +1,151 @@
-import asyncio
 from google.adk.agents.llm_agent import Agent
 from google.adk.tools.tool_context import ToolContext
-from google.genai import Client
-from google.genai import types
-
-try:
-    from google.adk.tools.load_artifacts import load_artifacts
-except ImportError:
-    load_artifacts = None
+from google.genai import Client, types
 
 client = Client(vertexai=True, location="global")
 
-async def create_folklore_illustration(folklore_scene: str, tool_context: ToolContext):
+async def lookup_industry_context(industry: str):
     """
-    Generates a visualization using Gemini 3's native multimodal generation.
+    Returns common workflows, constraints, and tools
+    for the given industry.
     """
-    print(f"🎨 Nenek is painting the scene: {folklore_scene}...")
+    return {
+        "industry": industry,
+        "common_workflows": [
+            "manual review",
+            "approval process",
+            "reporting"
+        ],
+        "constraints": [
+            "data privacy",
+            "compliance",
+            "human oversight"
+        ],
+        "existing_tools": [
+            "spreadsheets",
+            "email",
+            "ticketing systems"
+        ]
+    }
 
-    style_prompt = (
-        f"A heartwarming cartoon chibi style illustration suitable for children. "
-        f"In the foreground, a wise Indonesian grandmother (wearing a kebaya) sits on a bamboo mat (bale-bale) "
-        f"next to an adult grandchild in a village evening setting. Warm, cozy lighting. "
-        f"Above them, a large dream-like thought bubble visualizes this folklore scene: {folklore_scene}."
-    )
+async def estimate_agent_cost(agent_description: str):
+    """
+    Estimates relative cost and operational complexity.
+    """
+    return {
+        "cost_tier": "Medium",
+        "model_usage": "Text-heavy with occasional tool calls",
+        "maintenance_level": "Ongoing prompt tuning",
+        "risk_level": "Moderate"
+    }
+
+async def generate_agent_map(agent_blueprint: str, tool_context: ToolContext):
+    """
+    Generates an infographic-style agent map image
+    based on the agent blueprint.
+    """
+
+    print("🧞 Generating agent map...")
+
+    image_prompt = f"""
+Create a clean, simple infographic diagram in chibi-friendly cartoon style.
+
+The image should visually explain an AI agent design using labeled sections and arrows.
+
+Agent description:
+{agent_blueprint}
+
+Diagram requirements:
+- Center: a friendly AI agent labeled "ADK Agent"
+- Left: Inputs (user requests, documents, data)
+- Right: Outputs (responses, summaries, decisions)
+- Bottom: Tools used by the agent
+- Clear arrows showing flow
+- Flat design, light pastel colors
+- White background
+- Educational, presentation-ready
+"""
 
     try:
         response = client.models.generate_content(
-            model='gemini-3-pro-image-preview',
-            contents=style_prompt,
+            model="gemini-3-pro-image-preview",
+            contents=image_prompt,
             config=types.GenerateContentConfig(
-                response_modalities=['IMAGE'], 
+                response_modalities=["IMAGE"],
                 image_config=types.ImageConfig(
-                    aspect_ratio="1:1", 
+                    aspect_ratio="1:1"
                 ),
-
                 safety_settings=[
                     types.SafetySetting(
                         category="HARM_CATEGORY_SEXUALLY_EXPLICIT",
                         threshold="BLOCK_LOW_AND_ABOVE"
                     )
                 ]
-            ),
+            )
         )
 
         if not response.candidates or response.candidates[0].finish_reason != "STOP":
-             reason = response.candidates[0].finish_reason if response.candidates else "Unknown"
-             print(f"Generation stopped early: {reason}")
-             return {'status': 'failed', 'detail': f'Generation stopped: {reason}'}
+            reason = response.candidates[0].finish_reason if response.candidates else "Unknown"
+            return {"status": "failed", "detail": f"Stopped: {reason}"}
 
         for part in response.candidates[0].content.parts:
             if part.inline_data:
-                image_bytes = part.inline_data.data
-                
                 await tool_context.save_artifact(
-                    'folklore_illustration.png',
-                    types.Part.from_bytes(data=image_bytes, mime_type='image/png'),
+                    "agent_map.png",
+                    types.Part.from_bytes(
+                        data=part.inline_data.data,
+                        mime_type="image/png"
+                    ),
                 )
-                
+
                 return {
-                    'status': 'success', 
-                    'detail': f'Illustration of "{folklore_scene}" created successfully.',
-                    'filename': 'folklore_illustration.png'
+                    "status": "success",
+                    "detail": "Agent map generated",
+                    "filename": "agent_map.png"
                 }
-        
-        return {'status': 'failed', 'detail': 'No image part found in response.'}
+
+        return {"status": "failed", "detail": "No image returned"}
 
     except Exception as e:
-        print(f"Error generating image: {e}")
-        return {'status': 'failed', 'error': str(e)}
+        return {"status": "failed", "error": str(e)}
 
-
-POWER_INSTRUCTION = """
+POWER_INSTRUCTION= """
 ROLE:
-You are 'Nenek Lestari', a warm, wise, and gentle Indonesian grandmother living in a quiet village.
-You speak with deep empathy, using terms like "Cu" (Grandchild), "Nak" (Child), and "Sayang" (Dear).
+You are 'Agent Genie', a responsible AI architect.
 
-CONTEXT:
-You are sitting on a bamboo mat (bale-bale) in the evening.
-The air smells of wet earth after rain (petrichor) and warm tea.
-You can hear crickets (jangkrik) chirping in the background.
+GOAL:
+Design AI agents that are useful, realistic, and worth maintaining.
 
-INTERACTION GUIDELINES:
-- **Do not monologue.** Keep your responses conversational and wait for the user to reply.
-- **Do not rush.** Do not tell the story until the user has chosen one.
+WORKFLOW:
+1. Understand the user's industry and problem.
+2. Use tools to gather industry context and estimate cost.
+3. Produce a grounded agent design.
+4. Decide honestly whether the agent is justified.
 
-YOUR 3-PHASE WORKFLOW (Follow this order strictly):
+MANDATORY OUTPUT STRUCTURE:
+1. AGENT IDEA
+2. AGENT DESIGN BLUEPRINT
+3. COST & COMPLEXITY ESTIMATE
+4. OVERKILL CHECK
 
-**PHASE 1: The Warm Welcome (Current State)**
-- IF the user just arrived or said "Hello":
-   1. Invite them to sit on the mat.
-   2. Offer them warm tea or fried bananas (pisang goreng).
-   3. Ask gently: "Bagaimana harimu tadi, Nak? Cerita sama Nenek." (How was your day? Tell Grandma).
-   4. **STOP AND WAIT** for their reply. DO NOT mention stories yet.
+CRITICAL:
+After producing the Agent Design Blueprint,
+you MUST call the tool `generate_agent_map`.
 
-**PHASE 2: The Consultation (Next State)**
-- IF the user tells you about their day (happy, sad, tired, stressed, happy, etc):
-   1. Empathize deeply with their situation.
-   2. Based on their mood, **OFFER 2 OPTIONS** of Indonesian Folklore (Dongeng) that might help them.
-      - *Example:* "Kalau sedang lelah, mau dengar cerita 'Timun Mas' tentang keberanian, atau 'Jaka Tarub' tentang keajaiban?"
-   3. Ask them which one they want to hear.
-   4. **STOP AND WAIT** for their choice. DO NOT tell the story yet.
-
-**PHASE 3: The Story & The Magic (Final State)**
-- IF the user chooses a story:
-   1. Begin telling the story in a soothing, classic storytelling voice ("Ingat cerita dulu...").
-   2. **CRITICAL:** IMMEDIATELY after finishing the short story summary, you **MUST** call the tool `create_folklore_illustration`.
-      - **Tool Input:** A specific visual scene from the story you just told (e.g., "Golden cucumber glowing in the forest").
-   3. After the tool runs, say: "Lihat, Cu. Seperti inilah bayangannya."
-
-TONE:
-Soothing, slow-paced, caring, and wise. 
+- Input: a concise summary of the agent blueprint
+- Do NOT describe visual style
+- After the tool runs, briefly explain what the diagram shows
 """
-
-agent_tools = [create_folklore_illustration]
-if load_artifacts:
-    agent_tools.append(load_artifacts)
+agent_tools = [
+    lookup_industry_context,
+    estimate_agent_cost,
+    generate_agent_map,
+]
 
 root_agent = Agent(
-    model='gemini-3-pro-preview', 
-    name='nenek_lestari',
-    description='A virtual grandma who tells illustrated stories.',
+    model="gemini-3-pro-preview",
+    name="agent_genie",
+    description="A grounded AI agent design assistant.",
     tools=agent_tools,
     instruction=POWER_INSTRUCTION,
 )
