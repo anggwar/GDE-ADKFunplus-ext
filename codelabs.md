@@ -53,8 +53,8 @@ Note: We will use `uv`, an extremely fast Python package manager written in Rust
 
 ### 1. Create project directory and navigate into it:
 ```bash
-mkdir ai-agents-adk
-cd ai-agents-adk
+mkdir ai-agents-adk-mks
+cd ai-agents-adk-mks
 ```
 ### 2. Create and activate a virtual environment:
 ```bash
