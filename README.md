@@ -1,40 +1,77 @@
-# Build Agents with ADK: Foundations+ 👵🏻✨
-### Workshop Project — "CeritaNenek"
+# Build Agents with ADK: Foundations+ 🧠✨
+### Hands-on Workshop on Power Prompting for Smarter Agents
 
-*Learn the difference between regular agents and **Power-Prompted** agents using Google’s Agentic Development Kit (ADK) and the new **Gemini 3.0 Pro Preview**.*
+Learn how to build **predictable, responsible AI agents** using Google’s **Agent Development Kit (ADK)** and **Gemini 3 Pro**, and understand why *instruction design* matters more than clever prompts.
 
 ---
 
 ## 0. Overview
 
-In this extended version of the [ADK Foundations Codelab](https://codelabs.developers.google.com/devsite/codelabs/build-agents-with-adk-foundation), you will embark on a journey to build **CeritaNenek** — a virtual Indonesian grandmother who doesn't just chat, but comforts you with warmth and folklore.
+This repository inspired by Thu Ya Kyaw's **Building AI Agents with ADK:The Foundation** codelab, accompanies the workshop **“Build Agents with ADK: Foundations+”**, an extended, beginner-friendly exploration of agent development using Google’s Agent Development Kit (ADK).
 
-We will build few versions of the same agent to demonstrate how **Power Prompting** transforms an AI's personality.
+Instead of jumping straight into complex multi-agent systems, this workshop focuses on something more fundamental and more important:
 
-### 📚 What You’ll Learn
-* The fundamentals of the **Agent Development Kit (ADK)**.
-* How to use the *NEW* **Gemini 3.0 Pro Preview** model for superior reasoning.
-* The difference between a **Basic Instruction** and a **Power Prompt**.
-* How to engineer empathy, cultural context, and structure into an agent.
+> How clear instructions turn an AI model into a reliable agent.
 
-### 🛠️ What You’ll Build
-1.  **Agent A (Basic):** A simple storyteller.
-2.  **Agent B (Power):** "Nenek Lestari," a warm, culturally aware agent who uses sensory details and metaphors.
-3.  **Agent C (Multimodal):** *(Optional Challenge)* An advanced version that illustrates the stories using Gemini 3's native image generation capabilities.
+You will build **multiple versions of the same agent**, each slightly more capable than the last, to experience firsthand how **power prompting** shapes behavior, responsibility, and usefulness.
 
-### 🧰 What You’ll Need
-* A **Google Cloud Project** with billing enabled.
-* **Python 3.10+** installed.
-* Access to **Vertex AI** and the `gemini-3-pro-preview` model.
+## 🧩 Workshop Structure
+The workshop follows a simple, repeatable progression:
+
+### Iteration 1 — Basic Agent
+A minimal agent with simple instructions.  
+It works, but only at a surface level.
+
+### Iteration 2 — Power-Prompted Agent
+The same agent, redesigned with:
+- clear roles
+- explicit goals
+- constraints and non-goals
+
+This is where the agent starts to feel intentional.
+
+### Iteration 3 — Tool-Enabled Agent
+The agent gains the ability to:
+- look up industry context
+- estimate cost and complexity
+- generate visual artifacts (agent maps)
+
+At this stage, the agent can **act**, not just respond.
 
 ---
 
-## 🎯 Workshop Goals
-By the end of this codelab, you will:
-- Understand the structure of an ADK agent.
-- Learn how to write and refine instructions (System Prompts).
-- Experience the difference between regular and power-prompted agents.
-- Deploy your CeritaNenek storyteller agent and share stories that feel alive ✨
+## 🧠 Example Workshop Agent
+### 🧞 Agent Genie
+
+Agent Genie is a meta-agent that helps users **design AI agents responsibly**.
+It demonstrates how an agent can:
+- generate agent ideas based on industry and problems
+- produce structured agent design blueprints
+- explain when an agent is overkill
+- visualize agent architecture as a simple infographic
+
+Agent Genie follows the same three-iteration learning model used throughout this workshop.
+
+---
+
+### 📚 What You’ll Learn
+By working through this repository "codelab", you will learn:
+- The fundamentals of **Agent Development Kit (ADK)**
+- How **Gemini 3 Pro** behaves as an agent reasoning model
+- Why most agents fail due to unclear instructions
+- How to write **power prompts** as behavioral contracts
+- How and when to introduce tools responsibly
+- When *not* to build an agent at all
+
+### 🧰 Prerequisites
+Before starting, make sure you have:
+- A **Google Cloud Project**
+- GCP credits from your closest DevFest event or paid tier billing, or GDP premium credits.
+- **Python 3.10+**
+- Access to **Vertex AI**
+- Access to:
+  - `gemini-3-pro-preview`
+  - `gemini-3-pro-image-preview`
 
 ---
 
@@ -42,17 +79,28 @@ By the end of this codelab, you will:
 
 **1. Clone the repository to explore it on your own:**
 ```bash
-git clone [https://github.com/anggwar/GDE-ADK-Foundations-Plus.git](https://github.com/anggwar/GDE-ADK-Foundations-Plus.git)
-cd GDE-ADK-Foundations-Plus
+git clone https://github.com/anggwar/GDE-ADKFunplus-ext.git
+cd GDE-ADKFunplus-ext
 ```
+---
+
+## 🎯 Workshop Goals
+By the end of this workshop, you should be able to:
+- Explain what an ADK agent actually is (and isn’t)
+- Design agents with clear responsibilities
+- Write instructions that reduce ambiguity and hallucination
+- Decide whether an agent is worth building in the first place
+- Build agents that feel intentional, not accidental
 
 ---
 
-## 🚀 Get Started
+## 📖 Codelab
+For a guided, step-by-step walkthrough, open the codelab:
 👉 [Open the Codelab →](./codelabs.md)
 
-
 ---
-
+## ⚠️ Disclaimer
+This repository is for educational purposes only.
+Sample agents, prompts, and tools are intentionally simplified and should be adapted before production use.
 
 © 2025 Google Developer Workshop — Educational use only.
