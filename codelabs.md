@@ -10,6 +10,11 @@ author: Angga Agia Wardhana
 # Build Agents with ADK: Foundations+ — Agent Genie 🧞
 
 ---
+🆕 **Update (17 Dec 2025): Now powered by Gemini 3 Flash Preview**
+
+This workshop now uses **Gemini 3 Flash Preview** for Iteration 1 and 2 to provide faster responses and tighter feedback loops during prompt iteration, while keeping **Gemini 3 Pro Preview** for advanced reasoning and tool-enabled agents.
+
+---
 
 ## 1. Introduction: From Vibes to Contracts
 
