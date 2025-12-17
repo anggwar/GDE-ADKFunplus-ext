@@ -36,7 +36,12 @@ We’ll implement Agent Genie in three iterations:
 2. **Iteration 2 — Power‑Prompted Agent**: A grounded AI architect with structure and judgment.
 3. **Iteration 3 — Tool‑Using Agent**: An agent that researches, estimates cost, and draws its own architecture diagram.
 
-Same ADK. Same model. Very different outcomes.
+(update) For this workshop, we intentionally use different Gemini 3 models at different stages.
+
+Early iterations use **Gemini 3 Flash Preview** for fast feedback and iteration speed.
+Later iterations switch to **Gemini 3 Pro Preview** when reasoning depth, tool usage, and responsibility increase.
+
+This mirrors real-world agent design: not every problem needs the biggest model.
 
 ---
 
@@ -201,7 +206,7 @@ Generate 2 AI agent ideas.
 """
 
 root_agent = Agent(
-    model='gemini-3-pro-preview',
+    model='gemini-3-flash-preview',
     name='agent_genie',
     description='A simple AI agent idea generator.',
     instruction=BASIC_INSTRUCTION,
@@ -274,7 +279,7 @@ RULES:
 """
 
 root_agent = Agent(
-    model="gemini-3-pro-preview",
+    model="gemini-3-flash-preview",
     name="agent_genie_pro",
     description="An agent that designs other agents responsibly.",
     instruction=POWER_INSTRUCTION,
@@ -302,11 +307,12 @@ adk web
 - Output is structured
 - The agent has opinions
 
-Same model. Same ADK. Completely different behavior.
+Even with a faster, lighter model, notice how much behavior improves.
+This is the point: better instructions beat “bigger models” more often than people expect.
 
 ---
 
-## 8. Iteration 3 — Agent with Tools
+## 8. Iteration 3 — Pro Agent with Tools
 
 Now we turn Agent Genie into a *real* agent.
 In this version, the agent can:
@@ -316,6 +322,16 @@ In this version, the agent can:
 - Generate an **architecture diagram** using Gemini image generation
 
 This is done by giving the agent **tools**. and the code will be LONG.
+
+FYI. In this iteration, we intentionally switch to **Gemini 3 Pro Preview**.
+
+Why?
+- The agent must reason across multiple tools
+- It must decide when to act
+- It produces artifacts, not just text
+
+This is where a stronger reasoning model is justified.
+
 ready? here it comes!
 
 ```python
