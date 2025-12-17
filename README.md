@@ -3,6 +3,11 @@
 
 Learn how to build **predictable, responsible AI agents** using Google’s **Agent Development Kit (ADK)** and **Gemini 3 Pro**, and understand why *instruction design* matters more than clever prompts.
 
+🆕 **Update (17 dec 2025): Now powered by Gemini 3 Flash Preview**
+
+This workshop now uses **Gemini 3 Flash Preview** for Iteration 1 and 2 to provide faster responses and tighter feedback loops during prompt iteration, while keeping **Gemini 3 Pro Preview** for advanced reasoning and tool-enabled agents.
+
+
 ---
 
 ## 0. Overview
@@ -70,8 +75,10 @@ Before starting, make sure you have:
 - **Python 3.10+**
 - Access to **Vertex AI**
 - Access to:
-  - `gemini-3-pro-preview`
-  - `gemini-3-pro-image-preview`
+  - gemini-3-flash-preview
+  - gemini-3-pro-preview
+  - gemini-3-pro-image-preview
+
 
 ---
 
