@@ -1,4 +1,4 @@
-# Build Agents with ADK: Foundations+ 🧠✨
+# Build Agents with ADK: Foundations+ v2 🧠✨
 ### Hands-on Workshop on Power Prompting for Smarter Agents
 
 Learn how to build **predictable, responsible AI agents** using Google’s **Agent Development Kit (ADK)** and **Gemini 3 Pro**, and understand why *instruction design* matters more than clever prompts.
