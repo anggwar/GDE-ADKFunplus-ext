@@ -227,7 +227,7 @@ adk web
 
 This is our **baseline**.
 
-![screenshot-placeholder-create-notebook](./assets/basic-agent.png)
+![screenshot-placeholder-create-notebook](./assets/basic-agent.jpg)
 
 Note: We have now manually updated the model parameter to gemini-3-flash-preview.
 
@@ -304,7 +304,7 @@ adk web
 
 ### Compare the experience
 
-![screenshot-placeholder-create-notebook](./assets/power-agent.png)
+![screenshot-placeholder-create-notebook](./assets/power-agent.jpg)
 
 - Responses feel intentional
 - Reasoning is visible
@@ -507,6 +507,7 @@ Run it:
 ```bash
 adk web
 ```
+![screenshot-placeholder-create-notebook](./assets/tool-agent.jpg)
 
 ### What changes
 
