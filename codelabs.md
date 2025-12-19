@@ -227,7 +227,9 @@ adk web
 
 This is our **baseline**.
 
-Note: We have now manually updated the model parameter to gemini-3-pro-preview.
+![screenshot-placeholder-create-notebook](./assets/basic-agent-1.png)
+
+Note: We have now manually updated the model parameter to gemini-3-flash-preview.
 
 ---
 
