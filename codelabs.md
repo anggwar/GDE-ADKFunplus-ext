@@ -227,7 +227,7 @@ adk web
 
 This is our **baseline**.
 
-![screenshot-placeholder-create-notebook](./assets/basic-agent-1.png)
+![screenshot-placeholder-create-notebook](./assets/basic-agent.png)
 
 Note: We have now manually updated the model parameter to gemini-3-flash-preview.
 
@@ -303,6 +303,8 @@ adk web
 ```
 
 ### Compare the experience
+
+![screenshot-placeholder-create-notebook](./assets/power-agent.png)
 
 - Responses feel intentional
 - Reasoning is visible
